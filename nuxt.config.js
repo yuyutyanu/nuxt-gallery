@@ -17,11 +17,18 @@ module.exports = {
   ** Customize the progress bar color
   */
   loading: { color: '#3B8070' },
+  plugins: [
+    {src: '~plugins/element-ui.js', ssr: false}
+  ],
   /*
   ** Build configuration
   */
   build: {
-    vendor: ['axios', 'element-ui', 'faker'],
+    vendor: [
+      'axios',
+      'element-ui',
+      'faker',
+    ],
     /*
     ** Run ESLint on save
     */

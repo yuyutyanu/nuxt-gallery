@@ -7,37 +7,54 @@
                     <div class="photo">
                         <img :src="url" alt="">
                     </div>
-                    <input type="file" @change="upload">
+                    <input type="file" @change="preview">
                 </label>
                 <div class="photo-title">
-                    <el-input placeholder="photography title" v-model="input"></el-input>
+                    <el-input placeholder="photography title" @input="setPhotoTitle"></el-input>
                 </div>
 
-                <el-button>File upload</el-button>
+                <el-button @click="notify">File upload</el-button>
             </div>
         </div>
-        <router-link to="/" class="to_home"><el-button><<</el-button></router-link>
+        <router-link to="/" class="to_home"><el-button><icon class="el-icon-arrow-left"></icon></el-button></router-link>
     </div>
 </template>
 
 <script>
   export default {
-    data () {
-      return {
-        input: '',
-        url: ''
+    computed: {
+      url () {
+        return this.$store.state.uploader.url
       }
     },
     methods: {
-      upload (e) {
+      preview (e) {
         const file = e.target.files[0]
         const reader = new FileReader()
-        reader.onloadend = () => {
-          this.url = reader.result
+        reader.onloadend = (e) => {
+          this.setUrl(reader.result)
         }
         if (file) {
           reader.readAsDataURL(file)
         }
+      },
+      upload () {
+        // const r =  await axios.post(api end point)
+        // r.then(this.notify('success'))
+        // r.catch(this.notify('failed')
+      },
+      notify () {
+        this.$notify({
+          title: 'Success',
+          message: 'アップロードしました',
+          type: 'success'
+        })
+      },
+      setPhotoTitle (e) {
+        this.$store.commit('uploader/setPhotoTitle', e)
+      },
+      setUrl (url) {
+        this.$store.commit('uploader/setUrl', url)
       }
     }
   }

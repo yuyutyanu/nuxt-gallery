@@ -8,7 +8,7 @@
                         <div style="padding: 14px;">
                             <span>Yummy hamburger</span>
                             <div class="bottom">
-                                <time class="time">{{ currentDate }}</time>
+                                <time class="time">{{ atUploaded }}</time>
                                 <el-button type="text" class="button">Delete</el-button>
                             </div>
                         </div>
@@ -17,7 +17,7 @@
             </el-row>
         </div>
         <router-link to="/uploader" class="to_uploader">
-            <el-button>>></el-button>
+            <el-button><i class="el-icon-arrow-right"></i></el-button>
         </router-link>
     </div>
 </template>
@@ -26,10 +26,14 @@
   import faker from 'faker'
 
   export default {
-    data () {
-      return {
-        currentDate: new Date()
+    computed: {
+      atUploaded () {
+        return this.$store.state.atUploaded
       }
+    },
+    async fetch ({store, params}) {
+      // await axios.get()
+      store.commit('init')
     },
     asyncData () {
       const images = []
