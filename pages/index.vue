@@ -2,45 +2,62 @@
     <div>
         <div class="container">
             <el-row>
-                <el-col :span="8" v-for="(o,index) in 10" :key="o" class="colomn">
+                <el-col :span="8" v-for="photo in $store.state.gallery" :key="photo" class="colomn">
                     <el-card class="card" :body-style="{ padding: '0px' }">
-                        <img :src="fake_images[index].image" class="card-image">
+                        <img :src="photo.url" class="card-image">
                         <div style="padding: 14px;">
-                            <span>Yummy hamburger</span>
+                            <span>{{photo.title}}</span>
                             <div class="bottom">
-                                <time class="time">{{ atUploaded }}</time>
-                                <el-button type="text" class="button">Delete</el-button>
+                                <time class="time">{{ photo.uploadedAt }}</time>
+                                <el-button type="text" class="button" @click="del(photo.id)">Delete</el-button>
                             </div>
                         </div>
                     </el-card>
                 </el-col>
             </el-row>
         </div>
-        <router-link to="/uploader" class="to_uploader">
+        <nuxt-link to="/uploader" class="to_uploader">
             <el-button><i class="el-icon-arrow-right"></i></el-button>
-        </router-link>
+        </nuxt-link>
     </div>
 </template>
 
 <script>
-  import faker from 'faker'
+  import axios from 'axios'
+  import { mapActions } from 'vuex'
+  import {INIT} from '../store/mutation-types'
+
+  const notifyOption = {
+    'sucess': {
+      title: 'Success',
+      message: '削除しました',
+      type: 'success',
+      duration: 2000
+    },
+    'error': {
+      title: 'Error',
+      message: '削除に失敗しました。もう一度削除してください',
+      type: 'error',
+      duration: 2000
+    }
+  }
 
   export default {
-    computed: {
-      atUploaded () {
-        return this.$store.state.atUploaded
-      }
+    async fetch ({store}) {
+      const result = await axios.get('/api/index')
+      store.commit(INIT, result.data)
     },
-    async fetch ({store, params}) {
-      // await axios.get()
-      store.commit('init')
-    },
-    asyncData () {
-      const images = []
-      for (var i = 0; i < 10; i++) {
-        images.push({'image': faker.image.image()})
+    methods: {
+      ...mapActions({
+        d: 'del'
+      }),
+      del (id) {
+        this.d(id).then(() => {
+          this.$notify(notifyOption.sucess)
+        }).catch(e => {
+          this.$notify(notifyOption.error)
+        })
       }
-      return {fake_images: images}
     }
   }
 </script>
@@ -84,7 +101,9 @@
 
     .card-image {
         width: 100%;
+        height:250px;
         display: block;
+        object-fit: contain;
     }
 
     .to_uploader {

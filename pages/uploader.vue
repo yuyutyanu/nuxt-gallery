@@ -10,51 +10,75 @@
                     <input type="file" @change="preview">
                 </label>
                 <div class="photo-title">
-                    <el-input placeholder="photography title" @input="setPhotoTitle"></el-input>
+                    <el-input placeholder="photography title" v-model="title"></el-input>
                 </div>
 
-                <el-button @click="notify">File upload</el-button>
+                <el-button @click="upload">File upload</el-button>
             </div>
         </div>
-        <router-link to="/" class="to_home"><el-button><icon class="el-icon-arrow-left"></icon></el-button></router-link>
+        <nuxt-link to="/" class="to_home">
+            <el-button>
+                <icon class="el-icon-arrow-left"></icon>
+            </el-button>
+        </nuxt-link>
     </div>
 </template>
 
 <script>
+  import {mapActions} from 'vuex'
+  import {SET_URL, SET_TITLE} from '../store/mutation-types'
+
+  const notifyOption = {
+    'sucess': {
+      title: 'Success',
+      message: 'アップロードしました',
+      type: 'success',
+      duration: 2000
+    },
+    'error': {
+      title: 'Error',
+      message: 'アップロードに失敗しました。jpg/png画像でもう一度やり直してください',
+      type: 'error',
+      duration: 2000
+    }
+  }
+
   export default {
     computed: {
       url () {
         return this.$store.state.uploader.url
+      },
+      title: {
+        get () {
+          return this.$store.state.uploader.title
+        },
+        set (value) {
+          this.$store.commit(`uploader/${SET_TITLE}`, value)
+        }
       }
     },
     methods: {
+      ...mapActions({
+        up: 'uploader/upload'
+      }),
       preview (e) {
         const file = e.target.files[0]
         const reader = new FileReader()
-        reader.onloadend = (e) => {
+        reader.onload = (e) => {
           this.setUrl(reader.result)
         }
-        if (file) {
-          reader.readAsDataURL(file)
-        }
+        if (file) reader.readAsDataURL(file)
+        e.target.value = null
       },
       upload () {
-        // const r =  await axios.post(api end point)
-        // r.then(this.notify('success'))
-        // r.catch(this.notify('failed')
-      },
-      notify () {
-        this.$notify({
-          title: 'Success',
-          message: 'アップロードしました',
-          type: 'success'
+        this.up().then(() => {
+          this.$notify(notifyOption.sucess)
+        }).catch(() => {
+          this.$notify(notifyOption.error)
         })
       },
-      setPhotoTitle (e) {
-        this.$store.commit('uploader/setPhotoTitle', e)
-      },
       setUrl (url) {
-        this.$store.commit('uploader/setUrl', url)
+        this.$store.commit(`uploader/${SET_URL}`, url)
       }
     }
   }
@@ -67,12 +91,14 @@
         padding: 20px;
         text-align: center;
     }
-    .uploader{
+
+    .uploader {
         position: absolute;
-        top:50%;
-        left:50%;
-        transform: translate(-50%,-50%);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
+
     .upload-file {
         height: 550px;
         width: 800px;
@@ -99,7 +125,7 @@
         display: none;
     }
 
-    .photo{
+    .photo {
         width: 100%;
         height: 100%;
         margin: 0 auto;
@@ -110,6 +136,7 @@
     .photo img {
         height: 100%;
         width: 100%;
+        object-fit: contain;
     }
 
     .photo-title {
