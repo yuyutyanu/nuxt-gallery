@@ -18,7 +18,7 @@ module.exports = {
   */
   loading: { color: '#3B8070' },
   plugins: [
-    {src: '~plugins/element-ui.js', ssr: false}
+    {src: '~plugins/element-ui.js'}
   ],
   /*
   ** Build configuration
