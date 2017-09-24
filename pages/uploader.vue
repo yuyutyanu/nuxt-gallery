@@ -7,10 +7,10 @@
                     <div class="photo">
                         <img :src="url" alt="">
                     </div>
-                    <input type="file" @change="preview">
+                    <input type="file" @change="preview" required>
                 </label>
                 <div class="photo-title">
-                    <el-input placeholder="photography title" v-model="title"></el-input>
+                    <el-input placeholder="photography title" v-model="title" ></el-input>
                 </div>
 
                 <el-button @click="upload">File upload</el-button>
@@ -25,21 +25,31 @@
 </template>
 
 <script>
-  import {mapActions} from 'vuex'
-  import {SET_URL, SET_TITLE} from '../store/mutation-types'
+  import {mapActions, mapMutations} from 'vuex'
+  import {SET_URL, SET_TITLE, SET_VALIDATE, SET_IS_SENDING} from '../store/mutation-types'
 
-  const notifyOption = {
+  const uploadNotifyOption = {
     'sucess': {
       title: 'Success',
       message: 'アップロードしました',
-      type: 'success',
-      duration: 2000
+      type: 'success'
     },
     'error': {
       title: 'Error',
       message: 'アップロードに失敗しました。jpg/png画像でもう一度やり直してください',
-      type: 'error',
-      duration: 2000
+      type: 'error'
+    }
+  }
+  const validationNotifyOption = {
+    'title': {
+      title: 'Error',
+      message: '写真のタイトルを50文字以内で入力してください',
+      type: 'error'
+    },
+    'url': {
+      title: 'Error',
+      message: '写真を選択してください',
+      type: 'error'
     }
   }
 
@@ -61,9 +71,15 @@
       ...mapActions({
         up: 'uploader/upload'
       }),
+      ...mapMutations({
+        [SET_URL]: `uploader/${SET_URL}`,
+        [SET_VALIDATE]: `uploader/${SET_VALIDATE}`,
+        [SET_IS_SENDING]: `uploader/${SET_IS_SENDING}`
+      }),
       preview (e) {
         const file = e.target.files[0]
         const reader = new FileReader()
+
         reader.onload = (e) => {
           this.setUrl(reader.result)
         }
@@ -71,14 +87,41 @@
         e.target.value = null
       },
       upload () {
-        this.up().then(() => {
-          this.$notify(notifyOption.sucess)
-        }).catch(() => {
-          this.$notify(notifyOption.error)
-        })
+        if (this.$store.state.uploader.isSending) return
+        this.validate()
+        if (!this.$store.state.uploader.isValidate) {
+          this.setSendFlag(true)
+          this.up().then(() => {
+            this.$notify(uploadNotifyOption.sucess)
+            this.setSendFlag(false)
+          }).catch(() => {
+            this.$notify(uploadNotifyOption.error)
+            this.setSendFlag(false)
+          })
+        }
+        this.setValidate(false)
       },
       setUrl (url) {
-        this.$store.commit(`uploader/${SET_URL}`, url)
+        this[SET_URL](url)
+      },
+      setValidate (flag) {
+        this[SET_VALIDATE](flag)
+      },
+      setSendFlag (flag) {
+        this[SET_IS_SENDING](flag)
+      },
+      validate () {
+        const title = this.$store.state.uploader.title
+        const url = this.$store.state.uploader.url
+
+        if (title.length === 0 || title.length >= 50) {
+          this.setValidate(true)
+          this.$notify(validationNotifyOption.title)
+        }
+        if (url.length === 0) {
+          this.setValidate(true)
+          this.$notify(validationNotifyOption.url)
+        }
       }
     }
   }
