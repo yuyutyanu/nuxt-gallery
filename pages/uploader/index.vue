@@ -18,7 +18,7 @@
         </div>
         <nuxt-link to="/" class="to_home">
             <el-button>
-                <icon class="el-icon-arrow-left"></icon>
+                <i class="el-icon-arrow-left"></i>
             </el-button>
         </nuxt-link>
     </div>
@@ -26,7 +26,7 @@
 
 <script>
   import {mapActions, mapMutations} from 'vuex'
-  import {SET_URL, SET_TITLE, SET_VALIDATE, SET_IS_SENDING} from '../store/mutation-types'
+  import {SET_URL, SET_TITLE, SET_VALIDATE, SET_IS_SENDING} from '../../store/mutation-types'
 
   const uploadNotifyOption = {
     'sucess': {
