@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="container">
-            <el-input placeholder="search..." icon="search" class="search" @input="search"></el-input>
+            <el-input placeholder="search..." icon="search" class="search" v-model="search"></el-input>
 
             <el-row>
-                <el-col :span="8" v-for="photo in $store.state.filterGallery" :key="photo" class="colomn">
+                <el-col :span="8" v-for="photo in gallery" :key="photo.id" class="colomn">
                     <el-card class="card" :body-style="{ padding: '0px' }">
                         <img :src="photo.url" class="card-image" @click="setPopupUrl(photo.id)">
                         <div style="padding: 14px;">
@@ -32,13 +32,25 @@
 <script>
   import axios from 'axios'
   import {mapActions, mapMutations} from 'vuex'
-  import {INIT, SET_POPUP_URL, SET_IS_POPUP, SEARCH} from '../store/mutation-types'
+  import {INIT, SET_POPUP_URL, SET_IS_POPUP, SET_SEARCH} from '../store/mutation-types'
   import {deleteNotifyOption} from '../plugins/element-ui.notify.option'
 
   export default {
     async fetch ({store}) {
       const result = await axios.get('/api/index')
       store.commit(INIT, result.data)
+    },
+    computed: {
+      gallery () {
+        return this.$store.state.gallery.filter((photo) => {
+          return photo.title.toLowerCase().indexOf(this.$store.state.search) > -1
+        })
+      },
+      search: {
+        set (value) {
+          this[SET_SEARCH](value)
+        }
+      }
     },
     methods: {
       ...mapActions({
@@ -47,11 +59,8 @@
       ...mapMutations([
         SET_POPUP_URL,
         SET_IS_POPUP,
-        SEARCH
+        SET_SEARCH
       ]),
-      search (e) {
-        this[SEARCH](e)
-      },
       del (id) {
         this.d(id).then(() => {
           this.$notify(Object.assign({}, deleteNotifyOption.sucess))

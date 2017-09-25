@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {INIT, DEL, SET_POPUP_URL, SET_IS_POPUP, SEARCH} from '../store/mutation-types'
+import {INIT, DEL, SET_POPUP_URL, SET_IS_POPUP, SET_SEARCH} from '../store/mutation-types'
 
 export const state = () => ({
   gallery: [{
@@ -10,7 +10,7 @@ export const state = () => ({
   }],
   popupUrl: '',
   isPopup: false,
-  filterGallery: []
+  search: ''
 })
 
 export const mutations = {
@@ -32,11 +32,8 @@ export const mutations = {
   [SET_IS_POPUP] (state, payload) {
     state.isPopup = payload
   },
-  [SEARCH] (state, payload) {
-    const gallery = state.gallery.filter((photo) => {
-      return photo.title.toLowerCase().indexOf(payload) > -1
-    })
-    state.filterGallery = gallery
+  [SET_SEARCH] (state, payload) {
+    state.search = payload
   }
 }
 

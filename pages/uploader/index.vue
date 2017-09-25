@@ -3,7 +3,7 @@
         <div class="container">
             <div class="uploader">
                 <label class="upload-file">
-                    <h1>+</h1>
+                    <h1><i class="el-icon-plus"></i></h1>
                     <div class="photo">
                         <img :src="url" alt="">
                     </div>
