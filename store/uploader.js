@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {SET_URL, SET_TITLE, CLEAR, SET_VALIDATE, SET_IS_SENDING} from '../store/mutation-types'
+import {SET_URL, SET_TITLE, CLEAR, SET_IS_VALIDATE, SET_IS_SENDING} from '../store/mutation-types'
 
 export const state = () => ({
   title: '',
@@ -15,7 +15,7 @@ export const mutations = {
   [SET_TITLE] (state, payload) {
     state.title = payload
   },
-  [SET_VALIDATE] (state, payload) {
+  [SET_IS_VALIDATE] (state, payload) {
     state.isValidate = payload
   },
   [SET_IS_SENDING] (state, payload) {

@@ -1,13 +1,12 @@
 const {Nuxt, Builder} = require('nuxt')
 const app = require('express')()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 4000
 const api = require('./api')
-const {urlencoded,json} = require('body-parser')
+const {urlencoded, json} = require('body-parser')
 
-app.use(urlencoded({ limit:'50mb', extended: false }))
+app.use(urlencoded({ limit: '50mb', extended: false }))
 app.use(json({limit: '50mb'}))
 app.use('/api', api)
-
 
 // Nuxt.js をオプションとともにインスタンス化する
 let config = require('../nuxt.config.js')

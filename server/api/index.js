@@ -4,4 +4,4 @@ const router = express.Router()
 
 router.use(gallery)
 
-module.exports =  router
+module.exports = router

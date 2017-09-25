@@ -33,21 +33,7 @@
   import axios from 'axios'
   import {mapActions, mapMutations} from 'vuex'
   import {INIT, SET_POPUP_URL, SET_IS_POPUP, SEARCH} from '../store/mutation-types'
-
-  const notifyOption = {
-    'sucess': {
-      title: 'Success',
-      message: '削除しました',
-      type: 'success',
-      duration: 2000
-    },
-    'error': {
-      title: 'Error',
-      message: '削除に失敗しました。もう一度削除してください',
-      type: 'error',
-      duration: 2000
-    }
-  }
+  import {deleteNotifyOption} from '../plugins/element-ui.notify.option'
 
   export default {
     async fetch ({store}) {
@@ -68,9 +54,9 @@
       },
       del (id) {
         this.d(id).then(() => {
-          this.$notify(notifyOption.sucess)
+          this.$notify(Object.assign({}, deleteNotifyOption.sucess))
         }).catch(e => {
-          this.$notify(notifyOption.error)
+          this.$notify(Object.assign({}, deleteNotifyOption.error))
         })
       },
       setPopupUrl (id) {

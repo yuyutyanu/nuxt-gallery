@@ -26,32 +26,8 @@
 
 <script>
   import {mapActions, mapMutations} from 'vuex'
-  import {SET_URL, SET_TITLE, SET_VALIDATE, SET_IS_SENDING} from '../../store/mutation-types'
-
-  const uploadNotifyOption = {
-    'sucess': {
-      title: 'Success',
-      message: 'アップロードしました',
-      type: 'success'
-    },
-    'error': {
-      title: 'Error',
-      message: 'アップロードに失敗しました。jpg/png画像でもう一度やり直してください',
-      type: 'error'
-    }
-  }
-  const validationNotifyOption = {
-    'title': {
-      title: 'Error',
-      message: '写真のタイトルを50文字以内で入力してください',
-      type: 'error'
-    },
-    'url': {
-      title: 'Error',
-      message: '写真を選択してください',
-      type: 'error'
-    }
-  }
+  import {SET_URL, SET_TITLE, SET_IS_VALIDATE, SET_IS_SENDING} from '../../store/mutation-types'
+  import {validateNotifyOption, uploadNotifyOption} from '../../plugins/element-ui.notify.option'
 
   export default {
     computed: {
@@ -73,7 +49,7 @@
       }),
       ...mapMutations({
         [SET_URL]: `uploader/${SET_URL}`,
-        [SET_VALIDATE]: `uploader/${SET_VALIDATE}`,
+        [SET_IS_VALIDATE]: `uploader/${SET_IS_VALIDATE}`,
         [SET_IS_SENDING]: `uploader/${SET_IS_SENDING}`
       }),
       preview (e) {
@@ -92,10 +68,10 @@
         if (!this.$store.state.uploader.isValidate) {
           this.setSendFlag(true)
           this.up().then(() => {
-            this.$notify(uploadNotifyOption.sucess)
+            this.$notify(Object.assign({}, uploadNotifyOption.sucess))
             this.setSendFlag(false)
           }).catch(() => {
-            this.$notify(uploadNotifyOption.error)
+            this.$notify(Object.assign({}, uploadNotifyOption.error))
             this.setSendFlag(false)
           })
         }
@@ -105,22 +81,25 @@
         this[SET_URL](url)
       },
       setValidate (flag) {
-        this[SET_VALIDATE](flag)
+        this[SET_IS_VALIDATE](flag)
       },
       setSendFlag (flag) {
         this[SET_IS_SENDING](flag)
       },
       validate () {
-        const title = this.$store.state.uploader.title
         const url = this.$store.state.uploader.url
+        const title = this.$store.state.uploader.title
+
+        if (url.length === 0) {
+          this.setValidate(true)
+          this.$notify(Object.assign({}, validateNotifyOption.url))
+          return false
+        }
 
         if (title.length === 0 || title.length >= 50) {
           this.setValidate(true)
-          this.$notify(validationNotifyOption.title)
-        }
-        if (url.length === 0) {
-          this.setValidate(true)
-          this.$notify(validationNotifyOption.url)
+          this.$notify(Object.assign({}, validateNotifyOption.title))
+          return false
         }
       }
     }

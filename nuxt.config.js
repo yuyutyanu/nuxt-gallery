@@ -27,7 +27,7 @@ module.exports = {
     vendor: [
       'axios',
       'element-ui',
-      'faker',
+      'faker'
     ],
     /*
     ** Run ESLint on save

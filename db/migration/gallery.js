@@ -12,6 +12,4 @@ c.query(
   );`
 )
 
-
-
 module.exports = c

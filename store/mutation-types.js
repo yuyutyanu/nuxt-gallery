@@ -1,6 +1,6 @@
 export const SET_URL = 'SET_URL'
 export const SET_TITLE = 'SET_TITLE'
-export const SET_VALIDATE = 'SET_VALIDATE'
+export const SET_IS_VALIDATE = 'SET_IS_VALIDATE'
 export const SET_IS_SENDING = 'SET_IS_SENDING'
 export const SET_POPUP_URL = 'SET_POPUP_URL'
 export const SET_IS_POPUP = 'SET_IS_POPUP'
