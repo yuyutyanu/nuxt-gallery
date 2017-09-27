@@ -9,6 +9,7 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "serve": "nodemon ./server/index.js",
+    "migrate": "node ./db/migration/index.js",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "fixer": "eslint --fix --ext .js,.vue --ignore-path .gitignore ."
@@ -19,6 +20,7 @@
     "dotenv": "^4.0.0",
     "element-ui": "^1.4.4",
     "express": "^4.15.4",
+    "jsonwebtoken": "^8.0.1",
     "mysql": "^2.14.1",
     "nuxt": "^1.0.0-rc11"
   },
