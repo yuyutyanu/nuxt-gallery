@@ -1,22 +1,20 @@
 <template>
     <div>
-        <div class="container">
-            <div class="uploader">
-                <label class="upload-file">
-                    <h1><i class="el-icon-plus"></i></h1>
-                    <div class="photo">
-                        <img :src="url" alt="">
-                    </div>
-                    <input type="file" @change="preview" required>
-                </label>
-                <div class="photo-title">
-                    <el-input placeholder="photography title" v-model="title" ></el-input>
+        <div class="uploader">
+            <label class="upload-file">
+                <h1><i class="el-icon-plus"></i></h1>
+                <div class="photo">
+                    <img :src="url" alt="">
                 </div>
-
-                <el-button @click="upload">File upload</el-button>
+                <input type="file" @change="preview" required>
+            </label>
+            <div class="photo-title">
+                <el-input placeholder="title" v-model="title"></el-input>
             </div>
+
+            <el-button @click="upload">File upload</el-button>
         </div>
-        <nuxt-link to="/" class="to_home">
+        <nuxt-link to="/" class="to_index">
             <el-button>
                 <i class="el-icon-arrow-left"></i>
             </el-button>
@@ -106,19 +104,13 @@
   }
 </script>
 
-<style>
-    .container {
-        width: 960px;
-        margin: 0 auto;
-        padding: 20px;
-        text-align: center;
-    }
-
+<style scoped>
     .uploader {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        text-align: center;
     }
 
     .upload-file {
@@ -164,23 +156,12 @@
     .photo-title {
         width: 50%;
         margin: 20px auto;
-        text-align: center;
     }
 
-    .photo-title input {
-        text-align: center;
-    }
-
-    .to_home {
+    .to_index {
         position: fixed;
         top: 50%;
         left: 20px;
         text-decoration: none;
-        color: gray;
-        background: #fff;
-    }
-
-    .to_home:hover {
-        color: black;
     }
 </style>

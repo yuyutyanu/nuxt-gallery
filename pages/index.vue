@@ -1,8 +1,9 @@
 <template>
     <div>
         <div class="container">
-            <el-input placeholder="search..." icon="search" class="search" v-model="search"></el-input>
-
+            <div class="search-box">
+                <el-input placeholder="search..." icon="search" class="search" v-model="search"></el-input>
+            </div>
             <el-row>
                 <el-col :span="8" v-for="photo in gallery" :key="photo.id" class="colomn">
                     <el-card class="card" :body-style="{ padding: '0px' }">
@@ -18,6 +19,9 @@
                 </el-col>
             </el-row>
         </div>
+        <nuxt-link to="/login" class="to_login">
+            <el-button><i class="el-icon-arrow-left"></i></el-button>
+        </nuxt-link>
         <nuxt-link to="/uploader" class="to_uploader">
             <el-button><i class="el-icon-arrow-right"></i></el-button>
         </nuxt-link>
@@ -26,6 +30,7 @@
                 <img :src="$store.state.popupUrl" alt="">
             </div>
         </transition>
+        <a href="#" class="to_me"><i class="el-icon-caret-top"></i></a>
     </div>
 </template>
 
@@ -47,6 +52,9 @@
         })
       },
       search: {
+        get () {
+          return ''
+        },
         set (value) {
           this[SET_SEARCH](value)
         }
@@ -54,7 +62,7 @@
     },
     methods: {
       ...mapActions({
-        d: 'del'
+        Del: 'del'
       }),
       ...mapMutations([
         SET_POPUP_URL,
@@ -62,7 +70,7 @@
         SET_SEARCH
       ]),
       del (id) {
-        this.d(id).then(() => {
+        this.Del(id).then(() => {
           this.$notify(Object.assign({}, deleteNotifyOption.sucess))
         }).catch(e => {
           this.$notify(Object.assign({}, deleteNotifyOption.error))
@@ -86,21 +94,24 @@
   }
 </script>
 
-<style>
+<style scoped>
     .container {
         width: 960px;
         margin: 0 auto;
         padding: 20px;
+        text-align: center;
     }
-    .search{
-        width:60%;
-        margin-bottom:30px;
-        margin-top:30px;
+
+    .search {
+        width: 60%;
+        margin-bottom: 40px;
+        margin-top: 30px;
     }
+
     .colomn {
         letter-spacing: -.4em;
         margin-right: 5%;
-        margin-bottom: 20px;
+        margin-bottom: 40px;
         width: 30% !important;
     }
 
@@ -110,11 +121,12 @@
 
     .card {
         letter-spacing: normal;
+        position: relative;
+        font-size:15px;
     }
 
     .time {
         font-size: 13px;
-        color: #999;
     }
 
     .bottom {
@@ -129,9 +141,17 @@
 
     .card-image {
         width: 100%;
-        height:250px;
+        height: 250px;
         display: block;
         object-fit: contain;
+        cursor: pointer;
+    }
+
+    .to_login {
+        position: fixed;
+        top: 50%;
+        left: 20px;
+        text-decoration: none;
     }
 
     .to_uploader {
@@ -139,30 +159,43 @@
         top: 50%;
         right: 20px;
         text-decoration: none;
-        color: gray;
-        background: #fff;
+        display: inline;
+    }
+    .to_me{
+        position: fixed;
+        bottom:20px;
+        right: 70px;
+        text-decoration: none;
+        border-bottom:solid 1px;
+        padding:15px;
+        color:#1f2d3d;
+        display: inline;
     }
 
-    .popup{
+    .popup {
         position: fixed;
         top: 0;
         width: 100%;
         height: 100vh;
-        background: rgba(255,255,255,0.8);
+        background: rgba(255, 255, 255, 0.8);
     }
-    .popup img{
+
+    .popup img {
         position: absolute;
-        top:50%;
-        left:50%;
-        transform: translate(-50%,-50%);
-        width:60%;
-        height:60%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60%;
+        height: 60%;
         object-fit: contain;
     }
+
     .fade-enter-active, .fade-leave-active {
         transition: opacity .5s
     }
-    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
+    {
         opacity: 0
     }
 </style>
