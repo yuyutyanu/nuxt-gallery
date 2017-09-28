@@ -8,11 +8,12 @@
 <script>
   import {mapMutations} from 'vuex'
   import {SET_ID} from '../store/mutation-types'
+  import jwt from 'jsonwebtoken'
 
   export default {
     mounted () {
-      if (window.localStorage) {
-        this[SET_ID](localStorage.getItem('token'))
+      if (localStorage.getItem('__t')) {
+        this[SET_ID](jwt.decode(localStorage.getItem('__t')).id)
       }
     },
     methods: {

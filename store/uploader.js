@@ -29,10 +29,16 @@ export const mutations = {
 
 export const actions = {
   upload ({ commit, state }, id = '') {
+    var __t = 'not login'
+    if (localStorage.getItem('__t')) {
+      __t = localStorage.getItem('__t')
+    }
+
     return axios.post('/api/create', {
       user_id: id,
       title: state.title,
-      url: state.url
+      url: state.url,
+      __t: __t
     }).then(() => {
       commit(CLEAR)
     })

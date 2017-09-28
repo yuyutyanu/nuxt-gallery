@@ -39,7 +39,11 @@ export const mutations = {
 
 export const actions = {
   del ({commit}, id) {
-    return axios.delete(`/api/delete/${id}`).then(() => {
+    var __t = null
+    if (localStorage.getItem('__t')) {
+      __t = localStorage.getItem('__t')
+    }
+    return axios.delete(`/api/delete/${id}/${__t}`).then(() => {
       commit(DEL, id)
     })
   }

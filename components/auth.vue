@@ -85,17 +85,16 @@
       login () {
         this.Login({email: this.email, password: this.password}).then((obj) => {
           this.clear()
+          localStorage.setItem('__t', obj.data)
           const token = jwt.decode(obj.data)
-          localStorage.setItem('token', token.id)
           this[SET_ID](token.id)
         })
       },
       register () {
-        this.clear()
         this.Register({email: this.email, password: this.password}).then((obj) => {
           this.clear()
+          localStorage.setItem('__t', obj.data)
           const token = jwt.decode(obj.data)
-          localStorage.setItem('token', token.id)
           this[SET_ID](token.id)
         })
       },
