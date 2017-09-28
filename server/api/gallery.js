@@ -10,7 +10,7 @@ router.get('/index', (req, res, next) => {
 })
 
 router.post('/create', (req, res, next) => {
-  c.query(`insert into gallery set ?`, {title: req.body.title, url: req.body.url, uploadedAt: new Date()},
+  c.query(`insert into gallery set ?`, {user_id: req.body.user_id, title: req.body.title, url: req.body.url, uploadedAt: new Date()},
     (error, results, fields) => {
       if (error) throw error
       res.status(200).end('success')

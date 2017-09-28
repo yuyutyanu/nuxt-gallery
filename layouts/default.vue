@@ -6,7 +6,21 @@
 </template>
 
 <script>
-  export default {}
+  import {mapMutations} from 'vuex'
+  import {SET_ID} from '../store/mutation-types'
+
+  export default {
+    mounted () {
+      if (window.localStorage) {
+        this[SET_ID](localStorage.getItem('token'))
+      }
+    },
+    methods: {
+      ...mapMutations({
+        [SET_ID]: `auth/${SET_ID}`
+      })
+    }
+  }
 </script>
 
 <style>

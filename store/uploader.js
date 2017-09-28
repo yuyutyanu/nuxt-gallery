@@ -28,8 +28,9 @@ export const mutations = {
 }
 
 export const actions = {
-  upload ({ commit, state }) {
+  upload ({ commit, state }, id = '') {
     return axios.post('/api/create', {
+      user_id: id,
       title: state.title,
       url: state.url
     }).then(() => {

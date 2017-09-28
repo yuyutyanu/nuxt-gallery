@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="container">
+            <div class="no_gallery" v-if="!$store.state.gallery.length"><p>No Image</p></div>
             <div class="search-box">
                 <el-input placeholder="search..." icon="search" class="search" v-model="search"></el-input>
             </div>
@@ -12,7 +13,7 @@
                             <span>{{photo.title}}</span>
                             <div class="bottom">
                                 <time class="time">{{ photo.uploadedAt }}</time>
-                                <el-button type="text" class="button" @click="del(photo.id)">Delete</el-button>
+                                <el-button type="text" class="button" @click="del(photo.id)" v-if="photo.user_id === null || id == photo.user_id">Delete</el-button>
                             </div>
                         </div>
                     </el-card>
@@ -58,6 +59,9 @@
         set (value) {
           this[SET_SEARCH](value)
         }
+      },
+      id () {
+        return this.$store.state.auth.id
       }
     },
     methods: {
@@ -100,6 +104,19 @@
         margin: 0 auto;
         padding: 20px;
         text-align: center;
+    }
+    .no_gallery{
+        position: absolute;
+        top:50%;
+        left:50%;
+        transform: translate(-50%, -50%);
+        border:solid 1px #bfcbd9;
+        padding:250px;
+        border-radius: 10px;
+    }
+    .no_gallery p{
+        font-size:30px;
+        color: #bfcbd9;
     }
 
     .search {

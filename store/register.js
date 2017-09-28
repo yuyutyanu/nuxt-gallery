@@ -2,9 +2,7 @@ import axios from 'axios'
 import {SET_IS_REGISTER} from '../store/mutation-types'
 
 export const state = () => ({
-  isRegister: false,
-  email: '',
-  password: ''
+  isRegister: false
 })
 
 export const mutations = {
@@ -14,12 +12,10 @@ export const mutations = {
 }
 
 export const actions = {
-  login ({state, commit}) {
-    return axios.post('/register', {
-      email: state.email,
-      password: state.password
-    }).then((data) => {
-      console.log(data)
+  register ({state}, {email, password}) {
+    return axios.post('/api/register', {
+      email: email,
+      password: password
     })
   }
 }

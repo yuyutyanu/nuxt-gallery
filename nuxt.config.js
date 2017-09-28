@@ -27,8 +27,8 @@ module.exports = {
   build: {
     vendor: [
       'axios',
-      'element-ui',
-      'faker'
+      'faker',
+      'jsonwebtoken'
     ],
     /*
     ** Run ESLint on save

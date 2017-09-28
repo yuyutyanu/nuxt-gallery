@@ -2,15 +2,15 @@
     <div>
         <el-form class="auth-form">
             <el-form-item>
-                <el-input type="text" auto-complete="off" placeholder="id"></el-input>
+                <el-input type="text" auto-complete="off" placeholder="id" v-model="email"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-input type="password" auto-complete="off" placeholder="password"></el-input>
+                <el-input type="password" auto-complete="off" placeholder="password" v-model="password"></el-input>
             </el-form-item>
 
             <el-form-item style="text-align: right">
                 <el-button v-if="isLogin" @click="login">Login</el-button>
-                <el-button v-if="isRegister" @click="login">Register</el-button>
+                <el-button v-if="isRegister" @click="register">Register</el-button>
             </el-form-item>
             <nuxt-link to="/register" class="to_register" v-if="isLogin">
                 <p>登録されていない方はこちらから</p>
@@ -29,7 +29,8 @@
 </template>
 <script>
   import {mapActions, mapMutations} from 'vuex'
-  import {SET_IS_LOGIN, SET_IS_REGISTER} from '../store/mutation-types'
+  import {SET_IS_LOGIN, SET_IS_REGISTER, SET_EMAIL, SET_PASSWORD, SET_ID, CLEAR} from '../store/mutation-types'
+  import jwt from 'jsonwebtoken'
   //  import {deleteNotifyOption} from '../plugins/element-ui.notify.option'
 
   export default{
@@ -40,6 +41,22 @@
       },
       isRegister () {
         return this.$store.state.register.isRegister
+      },
+      email: {
+        get () {
+          return this.$store.state.auth.email
+        },
+        set (value) {
+          this[SET_EMAIL](value)
+        }
+      },
+      password: {
+        get () {
+          return this.$store.state.auth.password
+        },
+        set (value) {
+          this[SET_PASSWORD](value)
+        }
       }
     },
     created () {
@@ -59,13 +76,31 @@
       }),
       ...mapMutations({
         [SET_IS_LOGIN]: `login/${SET_IS_LOGIN}`,
-        [SET_IS_REGISTER]: `register/${SET_IS_REGISTER}`
+        [SET_IS_REGISTER]: `register/${SET_IS_REGISTER}`,
+        [SET_EMAIL]: `auth/${SET_EMAIL}`,
+        [SET_PASSWORD]: `auth/${SET_PASSWORD}`,
+        [SET_ID]: `auth/${SET_ID}`,
+        [CLEAR]: `auth/${CLEAR}`
       }),
       login () {
-        this.Login()
+        this.Login({email: this.email, password: this.password}).then((obj) => {
+          this.clear()
+          const token = jwt.decode(obj.data)
+          localStorage.setItem('token', token.id)
+          this[SET_ID](token.id)
+        })
       },
       register () {
-        this.Register()
+        this.clear()
+        this.Register({email: this.email, password: this.password}).then((obj) => {
+          this.clear()
+          const token = jwt.decode(obj.data)
+          localStorage.setItem('token', token.id)
+          this[SET_ID](token.id)
+        })
+      },
+      clear () {
+        this[CLEAR]()
       }
     }
   }
@@ -80,21 +115,24 @@
         width: 30%;
         border: 1px solid #bfcbd9;
         padding: 60px;
-        border-radius:3px;
+        border-radius: 3px;
     }
-    .to_register{
+
+    .to_register {
         text-decoration: none;
-        font-size:14px;
-        color:#1f2d3d;
+        font-size: 14px;
+        color: #1f2d3d;
         display: block;
     }
-    .to_login{
+
+    .to_login {
         text-decoration: none;
-        font-size:14px;
-        color:#1f2d3d;
+        font-size: 14px;
+        color: #1f2d3d;
         display: block;
     }
-    .to_index{
+
+    .to_index {
         position: fixed;
         top: 50%;
         right: 20px;

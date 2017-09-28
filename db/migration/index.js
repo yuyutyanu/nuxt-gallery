@@ -1,17 +1,7 @@
 const c = require('../index')
 
-c.query(`drop table gallery;`)
 c.query(`drop table user;`)
-
-c.query(
-  `CREATE TABLE gallery (
-   id    MEDIUMINT NOT NULL AUTO_INCREMENT,
-   title VARCHAR(50),
-   url MEDIUMTEXT,
-   uploadedAt TIMESTAMP,
-   PRIMARY KEY (id)
-  );`
-)
+c.query(`drop table gallery;`)
 
 c.query(
   `CREATE TABLE user (
@@ -21,5 +11,18 @@ c.query(
    PRIMARY KEY (id)
   );`
 )
+
+c.query(
+  `CREATE TABLE gallery (
+   id    MEDIUMINT NOT NULL AUTO_INCREMENT,
+   user_id MEDIUMINT,
+   title VARCHAR(50),
+   url MEDIUMTEXT,
+   uploadedAt TIMESTAMP,
+   PRIMARY KEY (id),
+   CONSTRAINT foreign_key FOREIGN KEY (user_id) REFERENCES user(id)
+  );`
+)
+
 
 module.exports = c
