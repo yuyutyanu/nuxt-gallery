@@ -6,7 +6,10 @@ const host = process.env.HOST || '0.0.0.0'
 const api = require('./api')
 const {urlencoded, json} = require('body-parser')
 
-
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "localhost:3000")
+  next()
+})
 app.set('port', port)
 app.use(urlencoded({ limit: '50mb', extended: false }))
 app.use(json({limit: '50mb'}))

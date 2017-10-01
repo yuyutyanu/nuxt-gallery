@@ -8,7 +8,7 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "serve": "cross-env HOST=0.0.0.0 PORT=3000 nodemon ./server/index.js",
+    "serve": "nodemon ./server/index.js",
     "migrate": "node ./db/migration/index.js",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
