@@ -1,9 +1,10 @@
-import axios from 'axios'
+import axios from '../plugins/axios'
 import {INIT, DEL, SET_POPUP_URL, SET_IS_POPUP, SET_SEARCH} from '../store/mutation-types'
 
 export const state = () => ({
   gallery: [{
     id: '',
+    user_id: '',
     title: '',
     uploadedAt: '',
     url: ''
@@ -38,13 +39,19 @@ export const mutations = {
 }
 
 export const actions = {
-  del ({commit}, id) {
+  del ({commit}, {photoId, photoUserId}) {
     var __t = null
     if (localStorage.getItem('__t')) {
       __t = localStorage.getItem('__t')
     }
-    return axios.delete(`/api/delete/${id}/${__t}`).then(() => {
-      commit(DEL, id)
-    })
+    if (photoUserId) {
+      return axios.delete(`/api/delete/${photoId}/${photoUserId}`, {headers: {'Authorization': __t}}).then(() => {
+        commit(DEL, photoId)
+      })
+    } else {
+      return axios.delete(`/api/delete/${photoId}`, {headers: {'Authorization': __t}}).then(() => {
+        commit(DEL, photoId)
+      })
+    }
   }
 }

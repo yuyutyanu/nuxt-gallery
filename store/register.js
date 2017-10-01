@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from '../plugins/axios'
 import {SET_IS_REGISTER} from '../store/mutation-types'
 
 export const state = () => ({

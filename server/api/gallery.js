@@ -12,15 +12,19 @@ router.get('/index', (req, res, next) => {
 })
 
 router.post('/create', (req, res, next) => {
-  if (req.body.__t && req.body.__t !== null) {
-    jwt.verify(req.body.__t, process.env.JWT_SECRET, (error, decoded) => {
-      if (error) throw error
-    })
-  }else if(req.body.user_id){
-    throw new Error('不正なリクエスト')
-  }
+  var user_id
+  jwt.verify(req.get('Authorization'), process.env.JWT_SECRET, (error, token) => {
+    if(error) throw error
+    if(token.guest && token.guest === true){
+      user_id = null
+    }else if(token.id){
+      user_id = token.id
+    }else{
+      throw new Error('写真を登録する権限がありません')
+    }
+  })
   c.query(`insert into gallery set ?`, {
-      user_id: req.body.user_id,
+      user_id: user_id,
       title: req.body.title,
       url: req.body.url,
       uploadedAt: new Date()
@@ -31,8 +35,13 @@ router.post('/create', (req, res, next) => {
     })
 })
 
-router.delete('/delete/:id/:__t?', (req, res, next) => {
-  c.query(`delete from gallery where id = ?`, [req.params.id],
+router.delete('/delete/:photoId/:photoUserId?', (req, res, next) => {
+  jwt.verify(req.get('Authorization'), process.env.JWT_SECRET, (error, token) => {
+    if (token.id && req.params.photoUserId  && Number(req.params.photoUserId) !== Number(token.id)) throw new Error('写真を消す権限がありません')
+    if (token.guest && req.params.photoUserId && token.guest === true) throw new Error('写真を消す権限がありません')
+  })
+
+  c.query(`delete from gallery where id = ?`, [req.params.photoId],
     (error, results, fields) => {
       if (error) throw error
       res.status(200).end('success')

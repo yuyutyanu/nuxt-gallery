@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const c = require('../../db/index')
 const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 router.post('/register', (req, res, next) => {
   c.query('insert into user set ?', {email: req.body.email, password: req.body.password},
@@ -22,6 +23,12 @@ router.post('/login', (req, res, next) => {
         res.json(token)
       })
     })
+})
+
+router.post('/__t',(req, res, next) => {
+  jwt.sign({'guest':true}, process.env.JWT_SECRET, (error, token) => {
+    return res.json(token)
+  })
 })
 
 module.exports = router

@@ -13,7 +13,7 @@
                             <span>{{photo.title}}</span>
                             <div class="bottom">
                                 <time class="time">{{ photo.uploadedAt }}</time>
-                                <el-button type="text" class="button" @click="del(photo.id)" v-if="photo.user_id === null || id == photo.user_id">Delete</el-button>
+                                <el-button type="text" class="button" @click="del(photo.id, photo.user_id)" v-if="photo.user_id === null || id == photo.user_id">Delete</el-button>
                             </div>
                         </div>
                     </el-card>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import axios from '../plugins/axios'
   import {mapActions, mapMutations} from 'vuex'
   import {INIT, SET_POPUP_URL, SET_IS_POPUP, SET_SEARCH} from '../store/mutation-types'
   import {deleteNotifyOption} from '../plugins/element-ui.notify.option'
@@ -73,8 +73,8 @@
         SET_IS_POPUP,
         SET_SEARCH
       ]),
-      del (id) {
-        this.Del(id).then(() => {
+      del (photoId, photoUserId) {
+        this.Del({photoId: photoId, photoUserId: photoUserId}).then(() => {
           this.$notify(Object.assign({}, deleteNotifyOption.sucess))
         }).catch(e => {
           this.$notify(Object.assign({}, deleteNotifyOption.error))

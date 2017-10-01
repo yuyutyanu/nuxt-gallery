@@ -39,9 +39,6 @@
         set (value) {
           this.$store.commit(`uploader/${SET_TITLE}`, value)
         }
-      },
-      id () {
-        return this.$store.state.auth.id
       }
     },
     methods: {
@@ -68,7 +65,7 @@
         this.validate()
         if (!this.$store.state.uploader.isValidate) {
           this.setSendFlag(true)
-          this.up(this.id).then(() => {
+          this.up().then(() => {
             this.$notify(Object.assign({}, uploadNotifyOption.sucess))
             this.setSendFlag(false)
           }).catch(() => {

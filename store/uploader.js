@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from '../plugins/axios'
 import {SET_URL, SET_TITLE, CLEAR, SET_IS_VALIDATE, SET_IS_SENDING} from '../store/mutation-types'
 
 export const state = () => ({
@@ -28,18 +28,17 @@ export const mutations = {
 }
 
 export const actions = {
-  upload ({ commit, state }, id = '') {
-    var __t = 'not login'
+  upload ({ commit, state }) {
+    var __t = ''
     if (localStorage.getItem('__t')) {
       __t = localStorage.getItem('__t')
     }
 
     return axios.post('/api/create', {
-      user_id: id,
       title: state.title,
       url: state.url,
       __t: __t
-    }).then(() => {
+    }, {headers: {'Authorization': __t}}).then(() => {
       commit(CLEAR)
     })
   }
