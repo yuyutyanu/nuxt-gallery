@@ -36,3 +36,29 @@ export const deleteNotifyOption = {
     type: 'error'
   }
 }
+
+export const registerNotifyOption = {
+  'sucess': {
+    title: 'Success',
+    message: '登録が完了しました',
+    type: 'success'
+  },
+  'error': {
+    title: 'Error',
+    message: 'そのidは既に使用されています。',
+    type: 'error'
+  }
+}
+
+export const loginNotifyOption = {
+  'sucess': {
+    title: 'Success',
+    message: 'ログインが完了しました',
+    type: 'success'
+  },
+  'error': {
+    title: 'Error',
+    message: 'ログインに失敗しました,IDまたはパスワードが間違っています。',
+    type: 'error'
+  }
+}

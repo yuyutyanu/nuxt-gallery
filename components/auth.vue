@@ -31,7 +31,7 @@
   import {mapActions, mapMutations} from 'vuex'
   import {SET_IS_LOGIN, SET_IS_REGISTER, SET_EMAIL, SET_PASSWORD, SET_ID, CLEAR} from '../store/mutation-types'
   import jwt from 'jsonwebtoken'
-  //  import {deleteNotifyOption} from '../plugins/element-ui.notify.option'
+  import {loginNotifyOption, registerNotifyOption} from '../plugins/element-ui.notify.option'
 
   export default{
     props: ['type'],
@@ -84,22 +84,37 @@
       }),
       login () {
         this.Login({email: this.email, password: this.password}).then((obj) => {
+          if (obj.data.error) throw new Error()
           this.clear()
-          localStorage.setItem('__t', obj.data)
-          const token = jwt.decode(obj.data)
-          this[SET_ID](token.id)
+          this.setToken(obj)
+          this.$notify(loginNotifyOption.sucess)
+          setTimeout(() => {
+            location.href = '/'
+          }, 1000)
+        }).catch(() => {
+          this.$notify(loginNotifyOption.error)
         })
       },
       register () {
         this.Register({email: this.email, password: this.password}).then((obj) => {
+          if (obj.data.error) throw new Error()
           this.clear()
-          localStorage.setItem('__t', obj.data)
-          const token = jwt.decode(obj.data)
-          this[SET_ID](token.id)
+          this.setToken(obj)
+          this.$notify(registerNotifyOption.sucess)
+          setTimeout(() => {
+            location.href = '/'
+          }, 1000)
+        }).catch((e) => {
+          this.$notify(registerNotifyOption.error)
         })
       },
       clear () {
         this[CLEAR]()
+      },
+      setToken (obj) {
+        localStorage.setItem('__t', obj.data)
+        const token = jwt.decode(obj.data)
+        this[SET_ID](token.id)
       }
     }
   }
